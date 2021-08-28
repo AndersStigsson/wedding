@@ -1,7 +1,10 @@
 <template>
   <div class="home">
-    <img alt="Wedding Rings" src="../assets/wedding-ring.png">
-    <HelloWorld msg="Amanda och Anders Bröllop"/>
+    <img
+      alt="Wedding Rings"
+      src="../assets/wedding-ring.png"
+    >
+    <HelloWorld msg="Amanda och Anders Bröllop" />
   </div>
 </template>
 
