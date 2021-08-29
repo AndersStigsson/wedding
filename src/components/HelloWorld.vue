@@ -3,6 +3,10 @@
     <h1>
       {{ msg }}
     </h1>
+    <img
+      alt="Wedding Rings"
+      src="../assets/wedding-ring.png"
+    >
     <h2>
       Vad roligt att Ni vill komma på vårt bröllop!
     </h2>
@@ -70,6 +74,7 @@
             type="text"
             class="input is-dark is-expanded"
             placeholder="Förnamn och Efternamn"
+            required
           >
         </p>
       </div>
@@ -122,17 +127,20 @@
               class="checkbox"
             >
           </p>
-          <div class="field">
-            <p
+          <div
+            v-if="foodpreference"
+            class="field-body"
+          >
+            <!-- <p
               v-if="foodpreference"
               class="field"
-            >
-              <textarea
-                v-model="foodpreferences"
-                class="is-dark field-body"
-                placeholder="Vänligen specificera vad för specialkost och hur många personer"
-              />
-            </p>
+            > -->
+            <textarea
+              v-model="foodpreferences"
+              class="is-dark field-body"
+              placeholder="Vänligen specificera vad för specialkost och hur många personer"
+            />
+            <!-- </p> -->
           </div>
         </div>
       </div>
