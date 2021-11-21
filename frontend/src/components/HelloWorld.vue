@@ -1,45 +1,40 @@
 <template>
-  <div class="hello content">
-    <h1>
+  <div class="flex flex-col container max-w-lg mt-10 mx-auto w-full items-center justify-center bg-white dark:bg-gray-800 rounded-lg shadow">
+    <div class="text-3xl">
       {{ msg }}
-    </h1>
+    </div>
     <img
       alt="Wedding Rings"
       src="../assets/wedding-ring.png"
     >
-    <h2>
+    <div class="text-2xl">
       Vad roligt att Ni vill komma på vårt bröllop!
-    </h2>
-    <p>
+    </div>
+    <div class="text">
       Vänligen fyll i formuläret och klicka på skicka in.
-    </p>
+    </div>
     <!--<form id="send-form">-->
-      <div class="flex flex-col container max-w-md mt-10 mx-auto w-full items-center justify-center bg-white dark:bg-gray-800 rounded-lg shadow">
+    <div class="grid md:grid-cols-6 md:gap-1 grid-cols-1">
       <!-- <p class="field has-addons has-addons-centered control"> -->
-      <div class="flex flex-col divide-y w-full">
-        <div class="field-label is-normal">
-            Email:
+        <div class="col-span-1 text-lg">
+          Email:
         </div>
-        <p class="field-body">
+        <div class="md:col-span-5 col-span-1">
           <input
             v-model="form.email"
             type="email"
             required
-            class="input is-dark"
+            class=" input shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           >
-        </p>
-      </div>
+        </div>
       <!-- </p> -->
-      <div class="field is-horizontal">
-        <p class="field-label is-normal">
-          <label class="label">
+        <div class="col-span-1 text-lg">
             Hur många är Ni?
-          </label>
-        </p>
-        <p class="field-body">
+        </div>
+        <div class="md:col-span-5 col-span-1">
           <select
             v-model="form.amount"
-            class="select is-expanded"
+            class="form-select block mt-1 text-lg"
           >
             <option value="1">
               En
@@ -54,50 +49,54 @@
               Fyra
             </option>
           </select>
-        </p>
-      </div>
+        </div>
       <div
         v-for="n in Number(form.amount)"
         :key="n"
         :index="n"
-        class="field is-horizontal"
+        class="md:col-span-6 col-span-1"
       >
-        <p class="field-label is-normal">
-          <label class="label">
+        <div class="text-lg col-span-1">
             Namn:
-          </label>
-        </p>
-        <p class="field-body">
+        </div>
+        <div class="md:col-span-2 col-span-1">
           <input
             v-model="form.persons[n-1].fname"
             type="text"
-            class="input is-dark is-expanded"
+            class=" input shadow appearance-none border rounded  py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             placeholder="Förnamn och Efternamn"
             required
           >
-        </p>
+        </div>
+        <div class="text-lg col-span-1">
+            Eventuell specialkost
+        </div>
+        <div class="md:col-span-2 col-span-1">
+          <input
+            v-model="form.persons[n-1].foodpreference"
+            type="text"
+            class=" input shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            placeholder="Specialkost"
+            required
+          >
+        </div>
       </div>
-      <div class="field is-horizontal">
-        <p class="field-label is-normal">
-          <label class="label">
+        <div class="md:col-span-3 col-span-1 text-lg">
             Behöver Ni parkeringsplats?
-          </label>
-        </p>
-        <p class="field-body">
+        </div>
+        <div class="md:col-span-3 col-span-1">
           <input
             v-model="form.parking"
             type="checkbox"
             class="checkbox"
           >
-        </p>
-      </div>
-      <div class="field is-horizontal">
-        <p class="field-label is-normal">
+        </div>
+        <div class="md:col-span-3 col-span-1">
           <label class="label">
             Planerar Ni att hålla tal eller framföra ett spex?
           </label>
-        </p>
-        <div class="field-body">
+        </div>
+        <div class="md:col-span-3 col-span-1">
           <input
             v-model="form.speech"
             type="checkbox"
@@ -110,39 +109,7 @@
             Våra toastmasters kommer att kontakta Er för ytterligare information gällande detta.
           </p>
         </div>
-      </div>
 
-      <div class="field is-horizontal">
-        <p class="field-label is-normal">
-          <label class="label">
-            Specialkost?
-          </label>
-        </p>
-        <div class="field-body">
-          <p>
-            <input
-              v-model="form.foodpreference"
-              type="checkbox"
-              class="checkbox"
-            >
-          </p>
-          <div
-            v-if="form.foodpreference"
-            class="field-body"
-          >
-            <!-- <p
-              v-if="foodpreference"
-              class="field"
-            > -->
-            <textarea
-              v-model="form.foodpreferences"
-              class="is-dark field-body"
-              placeholder="Vänligen specificera vad för specialkost och hur många personer"
-            />
-            <!-- </p> -->
-          </div>
-        </div>
-      </div>
       <SendButton
         text="Skicka In"
         class="sendbutton"
@@ -203,40 +170,3 @@ export default defineComponent({
   }
 })
 </script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped lang="scss">
-h3 {
-  margin: 40px 0 0;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
-}
-form {
-  align-content: left;
-}
-.extrainfo {
-  font-size:0.8rem;
-  margin-block-start:0;
-}
-.speechbox {
-  margin-block-end: 0;
-}
-.sendbutton {
-  margin-top: 10px;
-}
-.leveled {
-  align-content: center;
-}
-.half-width {
-  width: 50%;
-}
-</style>
