@@ -13,17 +13,16 @@
     <p>
       Vänligen fyll i formuläret och klicka på skicka in.
     </p>
-    <form id="send-form">
+    <!--<form id="send-form">-->
+      <div class="flex flex-col container max-w-md mt-10 mx-auto w-full items-center justify-center bg-white dark:bg-gray-800 rounded-lg shadow">
       <!-- <p class="field has-addons has-addons-centered control"> -->
-      <div class="field is-horizontal">
-        <p class="field-label is-normal">
-          <label class="label">
+      <div class="flex flex-col divide-y w-full">
+        <div class="field-label is-normal">
             Email:
-          </label>
-        </p>
+        </div>
         <p class="field-body">
           <input
-            v-model="email"
+            v-model="form.email"
             type="email"
             required
             class="input is-dark"
@@ -39,7 +38,7 @@
         </p>
         <p class="field-body">
           <select
-            v-model="amount"
+            v-model="form.amount"
             class="select is-expanded"
           >
             <option value="1">
@@ -58,7 +57,7 @@
         </p>
       </div>
       <div
-        v-for="n in Number(amount)"
+        v-for="n in Number(form.amount)"
         :key="n"
         :index="n"
         class="field is-horizontal"
@@ -70,7 +69,7 @@
         </p>
         <p class="field-body">
           <input
-            v-model="persons[n-1].fname"
+            v-model="form.persons[n-1].fname"
             type="text"
             class="input is-dark is-expanded"
             placeholder="Förnamn och Efternamn"
@@ -86,7 +85,7 @@
         </p>
         <p class="field-body">
           <input
-            v-model="parking"
+            v-model="form.parking"
             type="checkbox"
             class="checkbox"
           >
@@ -100,12 +99,12 @@
         </p>
         <div class="field-body">
           <input
-            v-model="speech"
+            v-model="form.speech"
             type="checkbox"
             class="checkbox"
           >
           <p
-            v-if="speech"
+            v-if="form.speech"
             class="help"
           >
             Våra toastmasters kommer att kontakta Er för ytterligare information gällande detta.
@@ -122,13 +121,13 @@
         <div class="field-body">
           <p>
             <input
-              v-model="foodpreference"
+              v-model="form.foodpreference"
               type="checkbox"
               class="checkbox"
             >
           </p>
           <div
-            v-if="foodpreference"
+            v-if="form.foodpreference"
             class="field-body"
           >
             <!-- <p
@@ -136,7 +135,7 @@
               class="field"
             > -->
             <textarea
-              v-model="foodpreferences"
+              v-model="form.foodpreferences"
               class="is-dark field-body"
               placeholder="Vänligen specificera vad för specialkost och hur många personer"
             />
@@ -148,7 +147,8 @@
         text="Skicka In"
         class="sendbutton"
       />
-    </form>
+    <!--</form>-->
+    </div>
   </div>
 </template>
 
@@ -168,29 +168,37 @@ export default defineComponent({
   },
   data () {
     return {
-      persons: [
-        {
-          fname: '',
-          lname: ''
-        },
-        {
-          fname: '',
-          lname: ''
-        },
-        {
-          fname: '',
-          lname: ''
-        },
-        {
-          fname: '',
-          lname: ''
-        }],
-      amount: '1',
-      parking: false,
-      speech: false,
-      foodpreference: false,
-      foodpreferences: '',
-      email: ''
+      form: {
+        persons: [
+          {
+            fname: '',
+            lname: ''
+          },
+          {
+            fname: '',
+            lname: ''
+          },
+          {
+            fname: '',
+            lname: ''
+          },
+          {
+            fname: '',
+            lname: ''
+          }],
+        amount: '1',
+        parking: false,
+        speech: false,
+        foodpreference: false,
+        foodpreferences: '',
+        email: ''
+      }
+    }
+  },
+  methods: {
+    submit () {
+      // Send to database to save.
+      // Either using Laravel/PHP or a Node.js backend.
     }
   }
 })
