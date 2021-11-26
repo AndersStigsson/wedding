@@ -15,29 +15,25 @@ import (
 	"github.com/joho/godotenv"
 )
 
-type Vote struct {
-	Id     int `json:"id"`
-	BeerId int `json:"beerId"`
-	UserId int `json:"userId"`
-	Points int `json:"points"`
-}
-
 type AuthenticationError struct {
 	Error bool   `json:"error"`
 	Desc  string `json:"desc"`
 }
 
-type Beer struct {
-	Id         int     `json:"id"`
-	Name       string  `json:"name"`
-	Type       string  `json:"type"`
-	Votes      []Vote  `json:"votes"`
-	Points     *int    `json:"points"`
-	Year       int     `json:"year"`
-	PictureURL *string `json:"pictureURL"`
+type Guest struct {
+	Id      int     `json:"id"`
+	Email   string  `json:"email"`
+	Amount  int     `json:"amount"`
+	Parking bool    `json:"parking"`
+	Speech  bool    `json:"speech"`
+	Extras  []Extra `json:"guests"`
 }
 
-var Beers []Beer
+type Extra struct {
+	Id             int    `json:"id"`
+	Name           string `json:"name"`
+	FoodPreference string `json:"foodpreference"`
+}
 
 var db *sql.DB
 
@@ -55,7 +51,6 @@ func validateRequest(next http.HandlerFunc) http.HandlerFunc {
 		secret := os.Getenv("API_TOKEN")
 		key := r.Header.Get("x-api-token")
 		allowed := key == secret
-		fmt.Printf("Expected %s, got %s", secret, key)
 		if !allowed {
 			var err AuthenticationError
 			err.Desc = "Failed to authenticate"
@@ -71,6 +66,7 @@ func validateRequest(next http.HandlerFunc) http.HandlerFunc {
 func handleRequests() {
 	myRouter := mux.NewRouter().StrictSlash(true)
 	myRouter.HandleFunc("/", homePage)
+	myRouter.HandleFunc("/add", validateRequest(addNewGuest))
 	headersOk := handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type", "x-api-token"})
 	//originsOk := handlers.AllowedOrigins([]string{"*"})
 	methodsOk := handlers.AllowedMethods([]string{"GET", "HEAD", "POST", "PUT", "OPTIONS"})
@@ -80,32 +76,40 @@ func handleRequests() {
 
 func returnAllGuests(w http.ResponseWriter, r *http.Request) {
 	rows, err := db.Query("SELECT * FROM guests")
-	var beers []Beer
+	var guests []Guest
 	if err != nil {
 		log.Fatal("Error from DB")
 		panic(err.Error())
 	}
 
 	for rows.Next() {
-		var beer Beer
-		if err := rows.Scan(&beer.Id, &beer.Name, &beer.Type, &beer.Year, &beer.PictureURL); err != nil {
+		var guest Guest
+		if err := rows.Scan(&guest.Id, &guest.Email, &guest.Speech, &guest.Parking, &guest.Amount); err != nil {
 			panic(err.Error())
 		}
-		beers = append(beers, beer)
+		guests = append(guests, guest)
 	}
 
-	json.NewEncoder(w).Encode(beers)
+	json.NewEncoder(w).Encode(guests)
 }
 
-func createNewBeer(w http.ResponseWriter, r *http.Request) {
+func addNewGuest(w http.ResponseWriter, r *http.Request) {
 	reqBody, _ := ioutil.ReadAll(r.Body)
-	var beer Beer
-	json.Unmarshal(reqBody, &beer)
+	var guest Guest
+	var id int
+	json.Unmarshal(reqBody, &guest)
 
-	_, err := db.Exec("INSERT INTO beers (name, type, year, pictureURL) VALUES (?, ?, ?, ?)", beer.Name, beer.Type, beer.Year, beer.PictureURL)
+	err := db.QueryRow("INSERT INTO guests (email, speech, parking, amount) VALUES (?, ?, ?, ?) RETURNING id", guest.Email, guest.Speech, guest.Parking, guest.Amount).Scan(&id)
 	if err != nil {
 		fmt.Println("Failed in insert")
 		panic(err.Error())
+	}
+
+	for _, element := range guest.Extras {
+		_, err := db.Exec("INSERT INTO extras (guest_id, name, food_preferences) VALUES (?, ?, ?)", id, element.Name, element.FoodPreference)
+		if err != nil {
+			fmt.Printf("Failed to add extra %s, with fp %s on guest %d \n", element.Name, element.FoodPreference, id)
+		}
 	}
 
 	json.NewEncoder(w).Encode("Success")
