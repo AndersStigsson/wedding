@@ -1,0 +1,12 @@
+version: "3"
+services:
+  frontend:
+    build:
+      dockerfile: wedding.Dockerfile
+    ports:
+      - "10005:10005"
+  backend:
+    build:
+      dockerfile: weddingBackend.Dockerfile
+    ports:
+      - "10010:10010"
