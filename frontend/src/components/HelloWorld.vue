@@ -120,7 +120,10 @@
       />
     </div>
   </div>
-  <ThanksPage v-else />
+  <ThanksPage
+    v-else
+    :sentData="form"
+  />
 </template>
 
 <script lang="ts">
@@ -143,6 +146,7 @@ export default defineComponent({
     return {
       dataSent: false,
       form: {
+        guests: [] as Array<any>,
         persons: [
           {
             fname: '',
@@ -198,6 +202,7 @@ export default defineComponent({
           }
         )
       }
+      this.form.guests = body.guests
       const res = await fetch(`${process.env.VUE_APP_BACKEND}/add`, {
         method: 'POST',
         body: JSON.stringify(body),
