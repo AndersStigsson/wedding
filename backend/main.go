@@ -105,7 +105,8 @@ func addNewGuest(w http.ResponseWriter, r *http.Request) {
 		panic(err.Error())
 	}
 
-	for _, element := range guest.Extras {
+	for idx, element := range guest.Extras {
+		fmt.Printf("Checking guest Extra %d", idx)
 		_, err := db.Exec("INSERT INTO extras (guest_id, name, food_preferences) VALUES (?, ?, ?)", id, element.Name, element.FoodPreference)
 		if err != nil {
 			fmt.Printf("Failed to add extra %s, with fp %s on guest %d \n", element.Name, element.FoodPreference, id)
