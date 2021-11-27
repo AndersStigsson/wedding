@@ -1,5 +1,7 @@
 <template>
-  <div class="flex flex-col container max-w-lg mt-10 mx-auto w-full items-center justify-center bg-white dark:bg-gray-800 rounded-lg shadow">
+  <div class="flex flex-col container max-w-lg mt-10 mx-auto w-full items-center justify-center bg-white dark:bg-gray-800 rounded-lg shadow"
+      v-if="!dataSent"
+  >
     <div class="text-3xl">
       {{ msg }}
     </div>
@@ -118,15 +120,18 @@
       />
     </div>
   </div>
+  <ThanksPage v-else />
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
 import SendButton from './SendButton.vue'
+import ThanksPage from './ThanksPage.vue'
 export default defineComponent({
   name: 'HelloWorld',
   components: {
-    SendButton
+    SendButton,
+    ThanksPage
   },
   props: {
     msg: {
@@ -136,6 +141,7 @@ export default defineComponent({
   },
   data () {
     return {
+      dataSent: false,
       form: {
         persons: [
           {
@@ -203,7 +209,7 @@ export default defineComponent({
       const returnValue = await res.json()
       console.log(returnValue)
       if (returnValue === 'Success') {
-        window.alert('Tack!')
+        this.dataSent = true
       }
     }
   }
