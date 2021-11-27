@@ -13,4 +13,4 @@ COPY ./frontend/.env .
 
 RUN yarn build
 
-CMD ["serve", "-s", "build", "-l", "tcp://0.0.0.0:10005" ]
+CMD ["serve", "-s", "dist", "-l", "tcp://0.0.0.0:10005" ]
