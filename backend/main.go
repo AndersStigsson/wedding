@@ -65,7 +65,7 @@ func validateRequest(next http.HandlerFunc) http.HandlerFunc {
 func handleRequests() {
 	myRouter := mux.NewRouter().StrictSlash(true)
 	myRouter.HandleFunc("/", homePage)
-	myRouter.HandleFunc("/add", validateRequest(addNewGuest)).Methods("POST")
+	myRouter.HandleFunc("/add", validateRequest(addNewGuest))
 	headersOk := handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type", "x-api-token"})
 	// originsOk := handlers.AllowedOrigins([]string{"*"})
 	methodsOk := handlers.AllowedMethods([]string{"GET", "HEAD", "POST", "PUT", "OPTIONS"})
@@ -97,6 +97,7 @@ func addNewGuest(w http.ResponseWriter, r *http.Request) {
 	var guest Guest
 	var id int
 	json.Unmarshal(reqBody, &guest)
+	fmt.Println(guest.Email)
 
 	err := db.QueryRow("INSERT INTO guests (email, speech, parking, amount) VALUES (?, ?, ?, ?) RETURNING id", guest.Email, guest.Speech, guest.Parking, guest.Amount).Scan(&id)
 	if err != nil {
