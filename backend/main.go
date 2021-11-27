@@ -59,16 +59,15 @@ func validateRequest(next http.HandlerFunc) http.HandlerFunc {
 			return
 		}
 		next(w, r)
-
 	}
 }
 
 func handleRequests() {
 	myRouter := mux.NewRouter().StrictSlash(true)
 	myRouter.HandleFunc("/", homePage)
-	myRouter.HandleFunc("/add", validateRequest(addNewGuest))
+	myRouter.HandleFunc("/add", validateRequest(addNewGuest)).Methods("POST")
 	headersOk := handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type", "x-api-token"})
-	//originsOk := handlers.AllowedOrigins([]string{"*"})
+	// originsOk := handlers.AllowedOrigins([]string{"*"})
 	methodsOk := handlers.AllowedMethods([]string{"GET", "HEAD", "POST", "PUT", "OPTIONS"})
 
 	log.Fatal(http.ListenAndServe(":10010", handlers.CORS(headersOk, methodsOk)(myRouter)))
@@ -122,12 +121,12 @@ func main() {
 	if enverr != nil {
 		log.Fatalf("Error loading .env")
 	}
-	var username = os.Getenv("DBUSER")
-	var password = os.Getenv("DBPASS")
-	var host = os.Getenv("DBHOST")
-	var port = os.Getenv("DBPORT")
-	var dbname = os.Getenv("DBNAME")
-	var databasestring = fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", username, password, host, port, dbname)
+	username := os.Getenv("DBUSER")
+	password := os.Getenv("DBPASS")
+	host := os.Getenv("DBHOST")
+	port := os.Getenv("DBPORT")
+	dbname := os.Getenv("DBNAME")
+	databasestring := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", username, password, host, port, dbname)
 	var err error
 	db, err = sql.Open("mysql", databasestring)
 	if err != nil {
@@ -136,5 +135,4 @@ func main() {
 	defer db.Close()
 
 	handleRequests()
-
 }
