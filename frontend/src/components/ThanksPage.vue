@@ -19,7 +19,7 @@
       Antal: {{ sentData.amount }}
     </div>
     <div v-for="person in sentData.guests"
-        :key="person.fname"
+        :key="person.name"
     >
       <div>
       Namn: {{ person.fname }}
