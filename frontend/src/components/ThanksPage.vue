@@ -22,7 +22,7 @@
         :key="person.name"
     >
       <div>
-      Namn: {{ person.fname }}
+      Namn: {{ person.name }}
       </div>
       <div>
       Specialkost: {{ person.foodpreference }}
