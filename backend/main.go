@@ -29,6 +29,12 @@ type Guest struct {
 	Extras  []Extra `json:"guests"`
 }
 
+type ToastmasterGuest struct {
+	Name   string `json:"name"`
+	Email  string `json:"email"`
+	Speech bool   `json:"speech"`
+}
+
 type Extra struct {
 	Id             int    `json:"id"`
 	Name           string `json:"name"`
@@ -66,11 +72,32 @@ func handleRequests() {
 	myRouter := mux.NewRouter().StrictSlash(true)
 	myRouter.HandleFunc("/", homePage)
 	myRouter.HandleFunc("/add", validateRequest(addNewGuest))
+	myRouter.HandleFunc("/toastmasters", validateRequest(getInfoForToastmasters))
+
 	headersOk := handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type", "x-api-token"})
 	// originsOk := handlers.AllowedOrigins([]string{"*"})
 	methodsOk := handlers.AllowedMethods([]string{"GET", "HEAD", "POST", "PUT", "OPTIONS"})
 
 	log.Fatal(http.ListenAndServe(":10010", handlers.CORS(headersOk, methodsOk)(myRouter)))
+}
+
+func getInfoForToastmasters(w http.ResponseWriter, r *http.Request) {
+	rows, err := db.Query("SELECT * FROM Toastmasters")
+	var guests []ToastmasterGuest
+	if err != nil {
+		log.Fatal("Error from DB")
+		panic(err.Error())
+	}
+
+	for rows.Next() {
+		var guest ToastmasterGuest
+		if err := rows.Scan(&guest.Name, &guest.Email, &guest.Speech); err != nil {
+			panic(err.Error())
+		}
+		guests = append(guests, guest)
+	}
+
+	json.NewEncoder(w).Encode(guests)
 }
 
 func returnAllGuests(w http.ResponseWriter, r *http.Request) {
