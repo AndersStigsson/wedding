@@ -44,21 +44,21 @@ export default {
         type: Array,
         default: []
       }
-    };
+    }
   },
   mounted() {
-    this.fetchData();
+    this.fetchData()
   },
   methods: {
     async fetchData() {
       const res = await fetch(`${process.env.VUE_APP_BACKEND}/couple`, {
-        method: "GET",
+        method: 'GET',
         headers: {
-          "x-api-token": process.env.VUE_APP_API_TOKEN
+          'x-api-token': process.env.VUE_APP_API_TOKEN
         }
-      });
+      })
 
-      this.guests = await res.json();
+      this.guests = await res.json()
     }
   }
 };
