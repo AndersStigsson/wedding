@@ -29,6 +29,13 @@ type Guest struct {
 	Extras  []Extra `json:"guests"`
 }
 
+type CoupleGuest struct {
+	Email          string `json:"email"`
+	Parking        bool   `json:"parking"`
+	FoodPreference string `json:"foodpreference"`
+	Name           string `json:"name"`
+}
+
 type ToastmasterGuest struct {
 	Name   string `json:"name"`
 	Email  string `json:"email"`
@@ -73,12 +80,32 @@ func handleRequests() {
 	myRouter.HandleFunc("/", homePage)
 	myRouter.HandleFunc("/add", validateRequest(addNewGuest))
 	myRouter.HandleFunc("/toastmasters", validateRequest(getInfoForToastmasters))
+	myRouter.HandleFunc("/couple", validateRequest(getInfoForCouple))
 
 	headersOk := handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type", "x-api-token"})
 	// originsOk := handlers.AllowedOrigins([]string{"*"})
 	methodsOk := handlers.AllowedMethods([]string{"GET", "HEAD", "POST", "PUT", "OPTIONS"})
 
 	log.Fatal(http.ListenAndServe(":10010", handlers.CORS(headersOk, methodsOk)(myRouter)))
+}
+
+func getInfoForCouple(w http.ResponseWriter, r *http.Request) {
+	rows, err := db.Query("SELECT name, food_preferences, parking, email FROM OurInfo")
+	var guests []CoupleGuest
+	if err != nil {
+		log.Fatal("Error from DB")
+		panic(err.Error())
+	}
+
+	for rows.Next() {
+		var guest CoupleGuest
+		if err := rows.Scan(&guest.Name, &guest.FoodPreference, &guest.Parking, &guest.Email); err != nil {
+			panic(err.Error())
+		}
+		guests = append(guests, guest)
+	}
+
+	json.NewEncoder(w).Encode(guests)
 }
 
 func getInfoForToastmasters(w http.ResponseWriter, r *http.Request) {

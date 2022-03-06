@@ -1,6 +1,7 @@
 <template>
-  <div class="flex flex-col container max-w-lg mt-10 mx-auto w-full items-center justify-center bg-white dark:bg-gray-800 rounded-lg shadow"
-      v-if="!dataSent"
+  <div
+    v-if="!dataSent"
+    class="flex flex-col container max-w-lg mt-10 mx-auto w-full items-center justify-center bg-white dark:bg-gray-800 rounded-lg shadow"
   >
     <div class="text-3xl">
       {{ msg }}
@@ -16,7 +17,13 @@
       Vänligen fyll i formuläret och klicka på skicka in.
     </div>
     <div class="text-lg italic">
-      Om ni inte kan komma på bröllopet, skicka gärna ett mail till <a class="text-blue-500" href="mailto:brollop@skafteresort.se">brollop@skafteresort.se</a>
+      Om ni inte kan komma på bröllopet, skicka gärna ett mail till
+      <a
+        class="text-blue-500"
+        href="mailto:brollop@skafteresort.se"
+      >
+        brollop@skafteresort.se
+      </a>
     </div>
     <div class="grid md:grid-cols-6 grid-cols-1">
         <div class="col-span-1 text-lg">
