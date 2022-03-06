@@ -3,6 +3,7 @@ module.exports = {
   env: {
     node: true
   },
+  extends: ["plugin:vue/recommended", "@vue/standard"],
   parserOptions: {
     ecmaVersion: 2020
   },
