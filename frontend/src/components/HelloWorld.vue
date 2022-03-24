@@ -3,6 +3,25 @@
     v-if="!dataSent"
     class="flex flex-col container max-w-lg mt-10 mx-auto w-full items-center justify-center bg-white dark:bg-gray-800 rounded-lg shadow"
   >
+    <div class="grid grid-cols-2">
+      <div class="col-span-1">
+        <button
+          class="button text-sm"
+          @click="currentLanguage = 'sv'"
+        >
+          Svenska
+        </button>
+      </div>
+      <div class="col-span-1">
+        <button
+          class="button text-sm"
+          @click="currentLanguage = 'en'"
+        >
+          English
+        </button>
+      </div>
+    </div>
+
     <div class="text-3xl">
       {{ msg }}
     </div>
@@ -11,13 +30,13 @@
       src="../assets/wedding-ring.png"
     >
     <div class="text-2xl">
-      Vad roligt att Ni vill komma på vårt bröllop!
+      {{ translatedWord('happyThatYouWantToCome') }}
     </div>
     <div class="text">
-      Vänligen fyll i formuläret och klicka på skicka in.
+      {{ translatedWord('pleaseFillForm') }}
     </div>
     <div class="text-lg italic">
-      Om ni inte kan komma på bröllopet, skicka gärna ett mail till
+      {{ translatedWord('unableToCome') }}
       <a
         class="text-blue-500"
         href="mailto:brollop@skafteresort.se"
@@ -38,7 +57,7 @@
           >
         </div>
         <div class="col-span-1 text-lg">
-            Hur många är Ni?
+          {{ translatedWord('howMany') }}
         </div>
         <div class="md:col-span-5 md:ml-2 col-span-1">
           <select
@@ -47,16 +66,16 @@
             :style="{border: '2px solid #777'}"
           >
             <option :value=1>
-              En
+              {{ translatedWord('one') }}
             </option>
             <option :value=2>
-              Två
+              {{ translatedWord('two') }}
             </option>
             <option :value=3>
-              Tre
+              {{ translatedWord('three') }}
             </option>
             <option :value=4>
-              Fyra
+              {{ translatedWord('four') }}
             </option>
           </select>
         </div>
@@ -68,33 +87,33 @@
         class="grid md:grid-cols-6 grid-cols-1 my-5"
       >
         <div class="text-lg col-span-1 md:col-span-2">
-            Namn:
+          {{ translatedWord('name') }}:
         </div>
         <div class="md:col-span-4 col-span-1">
           <input
             v-model="form.persons[n-1].fname"
             type="text"
             class=" input shadow appearance-none border rounded  py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            placeholder="Förnamn och Efternamn"
+            :placeholder="translatedWord('firstnameLastname')"
             required
           >
         </div>
         <div class="text-lg col-span-1 md:col-span-2">
-            Eventuell specialkost
+          {{ translatedWord('foodPreferences') }}
         </div>
         <div class="md:col-span-4 col-span-1">
           <input
             v-model="form.persons[n-1].foodpreference"
             type="text"
             class=" input shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            placeholder="Specialkost"
+            :placeholder="translatedWord('foodPreference')"
             required
           >
         </div>
       </div>
       <div class="grid md:grid-cols-6 grid-cols-1">
         <div class="md:col-span-2 col-span-1 text-lg">
-            Behöver Ni parkeringsplats?
+          {{ translatedWord('needParking') }}
         </div>
         <div class="md:col-span-4 col-span-1 md:text-right">
           <input
@@ -104,7 +123,8 @@
           >
         </div>
         <div class="md:col-span-2 col-span-1 text-lg">
-            Planerar Ni att hålla tal eller framföra ett spex?
+          {{ translatedWord('planToSpeak') }}
+
         </div>
         <div class="md:col-span-3 md:col-start-5 col-span-1 md:ml-3 md:text-right">
           <input
@@ -117,11 +137,11 @@
             v-if="form.speech"
             class="md:col-span-6 col-span-1"
           >
-            Våra toastmasters kommer att kontakta Er för ytterligare information gällande detta.
+            {{ translatedWord('ourToastmasterWillContact') }}
           </div>
 
       <SendButton
-        text="Skicka In"
+        :text="translatedWord('send')"
         class="sendbutton my-5"
         @click="submit"
       />
@@ -130,10 +150,11 @@
   <ThanksPage
     v-else
     :sentData="form"
+    :currentLanguage="currentLanguage"
   />
 </template>
 
-<script lang="ts">
+<script>
 import { defineComponent } from 'vue'
 import SendButton from './SendButton.vue'
 import ThanksPage from './ThanksPage.vue'
@@ -153,7 +174,7 @@ export default defineComponent({
     return {
       dataSent: false,
       form: {
-        guests: [] as Array<any>,
+        guests: [],
         persons: [
           {
             fname: '',
@@ -179,10 +200,86 @@ export default defineComponent({
         parking: false,
         speech: false,
         email: ''
-      }
+      },
+      currentLanguage: 'sv',
     }
   },
+  computed: {
+
+    translations() {
+      return {
+        'happyThatYouWantToCome' : {
+          'en' : 'We are happy that you want to come to our wedding',
+          'sv' : 'Vad roligt att Ni vill komma på vårt bröllop!'
+        },
+        'pleaseFillForm' : {
+          'en' : 'Please fill the form and click send',
+          'sv' : 'Vänligen fyll i formuläret och klicka på skicka in.',
+        },
+        'unableToCome' : {
+          'en' : 'In case you can\'t come, please send an email to',
+          'sv' : 'Om Ni inte kan komma på bröllopet, skicka gärna ett mail till',
+        },
+        'howMany' : {
+          'en' : 'How many are you?',
+          'sv' : 'Hur många är Ni?',
+        },
+        'one' : {
+          'en' : 'One',
+          'sv' : 'En',
+        },
+        'two' : {
+          'en' : 'Two',
+          'sv' : 'Två',
+        },
+        'three' : {
+          'en' : 'Three',
+          'sv' : 'Tre',
+        },
+        'four' : {
+          'en' : 'Four',
+          'sv' : 'Fyra',
+        },
+        'name' : {
+          'en' : 'Name',
+          'sv' : 'Namn',
+        },
+        'firstnameLastname': {
+          'en' : 'Firstname and Surname',
+          'sv' : 'Förnamn och Efternamn',
+        },
+        'foodPreference': {
+          'en' : 'Food preference',
+          'sv' : 'Specialkost',
+        },
+        'foodPreferences': {
+          'en' : 'Potential food preferences',
+          'sv' : 'Eventuell specialkost',
+        },
+        'needParking': {
+          'en' : 'Do you need parking?',
+          'sv' : 'Behöver Ni parkeringsplats?',
+        },
+        'planToSpeak': {
+          'en' : 'Do you plan to hold a speech or perform a show?',
+          'sv' : 'Planerar Ni att hålla tal eller framföra ett spex?',
+        },
+        'ourToastmasterWillContact': {
+          'en' : 'Our toastmasters will contact you with further information about this.',
+          'sv' : 'Våra toastmasters kommer att kontakta Er för ytterligare information gällande detta.',
+        },
+        'send' : {
+          'en' : 'Send',
+          'sv' : 'Skicka In',
+        }
+
+      }
+    },
+  },
   methods: {
+    translatedWord(word) {
+      return this.translations[word][this.currentLanguage];
+    },
     checkForm () {
       let namesFilled = true
 
@@ -200,7 +297,7 @@ export default defineComponent({
         window.alert('Din email samt namn på samtliga gäster behövs')
         return
       }
-      const body = { email: this.form.email, amount: this.form.amount, parking: this.form.parking, speech: this.form.speech, guests: [] as Array<any> }
+      const body = { email: this.form.email, amount: this.form.amount, parking: this.form.parking, speech: this.form.speech, guests: [] }
       for (let i = 0; i < this.form.amount; i++) {
         body.guests.push(
           {

@@ -18,7 +18,7 @@ export default defineComponent({
 })
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 
 button {
     background-color: green;
