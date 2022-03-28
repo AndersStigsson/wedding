@@ -1,6 +1,6 @@
 <template>
   <div
-    class="flex flex-col container max-w-lg mt-10 mx-auto w-full items-center justify-center bg-white dark:bg-gray-800 rounded-lg shadow"
+    class="flex flex-col container max-w-lg mt-10 mx-auto w-full bg-white dark:bg-gray-800 rounded-lg shadow"
   >
     <table class="table table-responsive table-auto">
       <thead>
