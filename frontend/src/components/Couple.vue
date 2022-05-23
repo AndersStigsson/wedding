@@ -78,7 +78,7 @@ export default {
         }
       });
 
-      this.totalParkings = await res.json();
+      this.totalParkings = parkings;
     }
   },
 };
