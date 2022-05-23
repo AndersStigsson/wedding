@@ -81,6 +81,7 @@ func handleRequests() {
 	myRouter.HandleFunc("/add", validateRequest(addNewGuest))
 	myRouter.HandleFunc("/toastmasters", validateRequest(getInfoForToastmasters))
 	myRouter.HandleFunc("/couple", validateRequest(getInfoForCouple))
+	myRouter.HandleFunc("/totalParkings", validateRequest(getTotalAmountOfParkings))
 
 	headersOk := handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type", "x-api-token"})
 	// originsOk := handlers.AllowedOrigins([]string{"*"})
@@ -106,6 +107,17 @@ func getInfoForCouple(w http.ResponseWriter, r *http.Request) {
 	}
 
 	json.NewEncoder(w).Encode(guests)
+}
+
+func getTotalAmountOfParkings(w http.ResponseWriter, r *http.Request) {
+	var count int
+	row := db.QueryRow("SELECT count(*) FROM guests WHERE parking = 1")
+	err := row.Scan(&count)
+	if err != nil {
+		panic(err.Error())
+	}
+
+	json.NewEncoder(w).Encode(count)
 }
 
 func getInfoForToastmasters(w http.ResponseWriter, r *http.Request) {

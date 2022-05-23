@@ -51,6 +51,10 @@ export default {
       guests: {
         type: Array,
         default: []
+      },
+      totalParkings: {
+        type: Number,
+        default: 0
       }
     };
   },
@@ -67,15 +71,15 @@ export default {
       });
 
       this.guests = await res.json();
+      const parkings = await fetch(`${process.env.VUE_APP_BACKEND}/totalParkings`, {
+        method: "GET",
+        headers: {
+          "x-api-token": process.env.VUE_APP_API_TOKEN
+        }
+      });
+
+      this.totalParkings = await res.json();
     }
   },
-  computed: {
-    totalParkings() {
-      if (this.guests.length > 0) {
-        return this.guests.filter((g) => g.parking === true).length;
-      }
-      return 0;
-    }
-  }
 };
 </script>
