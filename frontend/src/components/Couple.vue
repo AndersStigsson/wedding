@@ -10,7 +10,7 @@
         Totalt antal parkeringar: {{ totalParkings }}
       </div>
     </div>
-    <table cylass="table table-responsive table-auto">
+    <table class="table table-responsive table-auto">
       <thead>
         <tr>
           <th>
@@ -41,7 +41,6 @@
         </tr>
       </tbody>
     </table>
-
   </div>
 </template>
 
