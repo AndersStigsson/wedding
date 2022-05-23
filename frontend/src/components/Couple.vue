@@ -2,7 +2,15 @@
   <div
     class="flex flex-col container max-w-lg mt-10 mx-auto w-full bg-white dark:bg-gray-800 rounded-lg shadow"
   >
-    <table class="table table-responsive table-auto">
+    <div class="row">
+      <div class="col">
+        Totalt antal: {{guests.length}}
+      </div>
+      <div class="col">
+        Totalt antal parkeringar: {{ totalParkings }}
+      </div>
+    </div>
+    <table cylass="table table-responsive table-auto">
       <thead>
         <tr>
           <th>
@@ -33,6 +41,7 @@
         </tr>
       </tbody>
     </table>
+
   </div>
 </template>
 
@@ -59,6 +68,14 @@ export default {
       });
 
       this.guests = await res.json();
+    }
+  },
+  computed: {
+    totalParkings() {
+      if (this.guests.length > 0) {
+        return this.guests.filter((g) => g.parking === true).length;
+      }
+      return 0;
     }
   }
 };
