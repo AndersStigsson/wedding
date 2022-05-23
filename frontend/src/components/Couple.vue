@@ -77,8 +77,9 @@ export default {
           "x-api-token": process.env.VUE_APP_API_TOKEN
         }
       });
+      // console.log(await parkings.json());
 
-      this.totalParkings = parkings;
+      this.totalParkings = await parkings.json();
     }
   },
 };
